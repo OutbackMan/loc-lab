@@ -4,10 +4,10 @@
 |                    | Desktop                                                                           | Android             | iOS        |
 | ------------------ | --------------------------------------------------------------------------------- | ------------------- | ---------- |
 | Windows            | [cmake][1], [llvm 8+][2], [mingw-w64](https://sourceforge.net/projects/mingw-w64) | [android studio][3] | N/A        |
-| Linux (Ubuntu)[^1] | [cmake][1], [llvm 8+][2]                                                          | [android studio][3] | N/A        |
+| Ubuntu 18.04[^1] | [cmake][1], [llvm 8+][2]                                                          | [android studio][3] | N/A        |
 | macOS              | [cmake][1], [llvm 8+][2], [xcode command line tools][4]                           | [android studio][3] | [xcode][4] |
 
-[^1]: In reality, ll supports any linux distribution with X11 or Wayland. Ubuntu is specified as it provides a somewhat standardized environment.
+[^1]: In reality, ll has the potential to support many other gnu/linux distributions. Ubuntu is specified as it provides a somewhat standardized environment.
 [1]: https://cmake.org/download
 [2]: http://releases.llvm.org/
 [3]: https://developer.android.com/studio

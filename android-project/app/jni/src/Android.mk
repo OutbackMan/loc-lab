@@ -4,12 +4,14 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := main
 
-SDL_PATH := ../SDL
+LOCAL_C_FLAGS=-DLL_SLOW -DLL_DEV
+
+SDL_PATH := ../../../../sdl2-2.0.9-minimal
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include
 
 # Add your application source files here...
-LOCAL_SRC_FILES := YourSourceHere.c
+LOCAL_SRC_FILES := ../../../../code/sdl-ll.c
 
 LOCAL_SHARED_LIBRARIES := SDL2
 

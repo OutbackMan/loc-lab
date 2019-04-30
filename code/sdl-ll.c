@@ -19,7 +19,9 @@ main(int argc, __attribute__ ((unused)) char* argv[argc + 1])
     SDL_Log("hits: %d, cycles: %d\n", hit_count, cycle_count);
   }
 
-  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Loc Lab", "Hello, world!", NULL);
+  if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Loc Lab", "Hello, world!", NULL) < 0) {
+    printf("failed to open msg box %s\n", SDL_GetError()); 
+  }
 
   return EXIT_SUCCESS;
 }

@@ -34,7 +34,15 @@
 #elif defined(_WIN64)
   #define WINDOWS 1
 #else
-  #error "Unsupported OS. Use gnu/linux, window, macos, iphoneos or android."
+  #error "Unsupported OS. Use gnu/linux, windows, macos, iphoneos or android."
+#endif
+
+#if defined(X86_64) && (defined(WINDOWS) || defined(GNU_LINUX) || defined(MACOS))
+  #define DESKTOP 1
+#elif defined(ARM) && (defined(ANDROID) || defined(IPHONEOS))
+  #define MOBILE 1
+#else
+  #error "Only support x86_64 running gnu/linux, windows or macos and armv8 running iphoneos or android."
 #endif
 
 #include <stdio.h>

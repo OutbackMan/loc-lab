@@ -41,7 +41,9 @@ git checkout -b my-feature-branch
 git push origin my-feature-branch 
 
 # Rebase regularly with upstream branch to avoid having to 3-way-merge.
-git pull --rebase upstream upstream/<starting-branch>
+git pull --rebase=interactive upstream upstream/<starting-branch>
+# If something goes amiss:
+git reflog; git reset --hard HEAD@{2}
 
 # Once feature is ready, push and submit a pull request on your fork.
 git push origin my-feature-branch

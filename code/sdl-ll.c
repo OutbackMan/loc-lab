@@ -2,7 +2,6 @@
 #include "SDL_opengl.h"
 
 #include "defs.h" 
-#include "log.c"
 #include "intrinsics.c"
 
 INTERNAL void DEBUGGER_BREAKPOINT_MARKER(void) {}
@@ -115,13 +114,29 @@ compute_drawable_region_from_aspect_ratio(u32 render_width, u32 render_height, u
   return result;
 }
 
+void
+sdl_log(char const* fmt, ...)
+{
+  va_list args;
+  va_start(args, fmt);
+
+  SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, fmt, args);
+
+#if defined(TYPE_DESKTOP)
+  // NOTE(Ryan): This is necessary to ensure immediate console output for cdt debugger.
+  fflush(stdout);
+#endif
+
+  va_end(args);
+}
+
 int
 main(int argc, __attribute__ ((unused)) char* argv[argc + 1])
 {
   DEBUGGER_BREAKPOINT_MARKER();
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC | SDL_INIT_AUDIO) < 0) {
-    log("Unable to initialize sdl: %s", SDL_GetError());
+    sdl_log("Unable to initialize sdl: %s", SDL_GetError());
     return EXIT_FAILURE;
   }
 
@@ -134,15 +149,21 @@ main(int argc, __attribute__ ((unused)) char* argv[argc + 1])
                                         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL
                                        );
   if (window == NULL) {
-    log("Unable to create sdl window: %s", SDL_GetError());
+    sdl_log("Unable to create sdl window: %s", SDL_GetError());
     return EXIT_FAILURE;
   }
 
+  // get refresh rate
+  // TODO(Ryan): Currently unsure if this is the right approach to allow average gpus to handle high refresh rate monitors, e.g. 144Hz and above, without stuttering.
+
+  // TODO(Ryan): Handle variable refresh rate monitors.
+  SDL_assert_release(refresh_rate != 0);
+
   SDL_GLContext context = SDL_GL_CreateContext(window);
     if (SDL_GL_SetSwapInterval(-1) < 0) {
-      log("Unable to enable adaptive vsync for sdl opengl context: %s", SDL_GetError());
+      sdl_log("Unable to enable adaptive vsync for sdl opengl context: %s", SDL_GetError());
       if (SDL_GL_SetSwapInterval(1) < 0) {
-        log("Unable to enable vsync for sdl opengl context: %s", SDL_GetError());
+        sdl_log("Unable to enable vsync for sdl opengl context: %s", SDL_GetError());
         // TODO(Ryan): Investigate if this occurs frequently enough to merit a fallback.
         return EXIT_FAILURE;
       }
@@ -159,7 +180,7 @@ main(int argc, __attribute__ ((unused)) char* argv[argc + 1])
   pixel_buffer.pitch = pixel_buffer.width * BYTES_PER_PIXEL;
   pixel_buffer.memory = calloc(pixel_buffer.width * pixel_buffer.height, BYTES_PER_PIXEL);
   if (pixel_buffer.memory == NULL) {
-    log("Unable to allocate memory for ll pixel buffer: %s", strerror(errno));
+    sdl_log("Unable to allocate memory for ll pixel buffer: %s", strerror(errno));
     return EXIT_FAILURE;
   }
 

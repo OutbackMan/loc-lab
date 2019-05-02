@@ -3,7 +3,7 @@
 
 #include "defs.h"
 
-#if defined(ARM)
+#if defined(ARCH_ARM)
   // IMPORTANT(Ryan): Assuming armv8, so neon is available.
   #include <arm_neon.h>
   #define WRITE_BARRIER() asm volatile("dmb ish" ::: "memory")
@@ -37,7 +37,7 @@ atomic_add_u64(u64 volatile* prev, u64 amount_to_add)
 INTERNAL inline s32
 round_r32_to_s32(r32 r32_val)
 {
-#if defined(ARM)
+#if defined(ARCH_ARM)
   return vcvts_s32_f32(r32_val);
 #else
   return _mm_cvtss_si32(_mm_set_ss(r32_val));

@@ -14,33 +14,33 @@
 
 // NOTE(Ryan): The main archictectures in use are x86_64 and armv8.
 #if defined(__x86_64__)
-  #define X86_64 1
+  #define ARCH_X86_64 1
 #elif defined(__ARM_ARCH_8__)
-  #define ARM 1
+  #define ARCH_ARM 1
 #else
   #error "Unsupported architecture. Target x86_64, or armv8."
 #endif
 
-#if defined(__ANDROID__)
-  #define ANDROID 1
+#if defined(ANDROID)
+  #define OS_ANDROID 1
 #elif defined(__linux__)
-  #define GNU_LINUX 1
+  #define OS_GNU_LINUX 1
 #elif defined(__APPLE__)
   #include <TargetConditionals.h>
   #if TARGET_OS_PHONE
-    #define IPHONEOS 1
+    #define OS_IPHONEOS 1
   #endif
-  #define MACOS 1
+  #define OS_MACOS 1
 #elif defined(_WIN64)
-  #define WINDOWS 1
+  #define OS_WINDOWS 1
 #else
   #error "Unsupported OS. Use gnu/linux, windows, macos, iphoneos or android."
 #endif
 
-#if defined(X86_64) && (defined(WINDOWS) || defined(GNU_LINUX) || defined(MACOS))
-  #define DESKTOP 1
-#elif defined(ARM) && (defined(ANDROID) || defined(IPHONEOS))
-  #define MOBILE 1
+#if defined(ARCH_X86_64) && (defined(OS_WINDOWS) || defined(OS_GNU_LINUX) || defined(OS_MACOS))
+  #define TYPE_DESKTOP 1
+#elif defined(ARCH_ARM) && (defined(OS_ANDROID) || defined(OS_IPHONEOS))
+  #define TYPE_MOBILE 1
 #else
   #error "Only support x86_64 running gnu/linux, windows or macos and armv8 running iphoneos or android."
 #endif

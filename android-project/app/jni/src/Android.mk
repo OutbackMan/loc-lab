@@ -6,12 +6,12 @@ LOCAL_MODULE := main
 
 LOCAL_C_FLAGS=-DLL_SLOW -DLL_DEV
 
-SDL_PATH := ../../../../sdl2-2.0.9-minimal
+# IMPORTANT(Ryan): Have to make a symlink for this. Using a different fixed path did not work.
+SDL_PATH := ../SDL
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include
 
-# Add your application source files here...
-LOCAL_SRC_FILES := ../../../../code/sdl-ll.c
+LOCAL_SRC_FILES := ../../../../code/sdl-ll.c 
 
 LOCAL_SHARED_LIBRARIES := SDL2
 

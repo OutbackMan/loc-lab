@@ -238,12 +238,14 @@ main(int argc, __attribute__ ((unused)) char* argv[argc + 1])
     pixel_buffer_row += pixel_buffer.pitch;
   }
 
+  u64 performance_counter_frequency = SDL_GetPerformanceFrequency();
+  u64 prev_counter = SDL_GetPerformanceCounter();
+
   want_to_run = true;
   while (want_to_run) {
     SDL_Event event = {0};
 
     drawable_region = compute_drawable_region_from_aspect_ratio(pixel_buffer.width, pixel_buffer.height, window_width, window_height);
-
     // mouse_x = Clamp01MapToRange(draw_region.min_x, )
 
     while (SDL_PollEvent(&event) != 0) {
@@ -266,8 +268,35 @@ main(int argc, __attribute__ ((unused)) char* argv[argc + 1])
       } 
     } // NOTE(Ryan): End event loop
 
+    if (render_to_vsync_enabled) {
+      r32 frame_dt = 1 / refresh_rate; 
+    } else {
+      frame_time = SDL_GetPerformanceCounter() - prev_counter / SDL_GetPerformanceFrequency();
+      
+      if (refresh_rate != 0) {
+        r32 target_frame_time = 1.0f / refresh_rate;
+        if (frame_time < target_frame_time) {
+          time_to_sleep = (target_frame_time - frame_time) * 1000.0f;
+          SDL_Delay(time_to_sleep);
+        }
+      } else {
+        // may have to run accumulate updates if running faster than expected to not break detection algorithms
+        r32 target_frame_time = 1.0f / 60.0f; 
+        r64 frame_dt = frame_time / target_frame_time;
+      }
+    }
+
+    // update before window update so as to not miss vblanks
+    u64 end_counter = SDL_GetPerformanceCounter();
+
     opengl_display_pixel_buffer(&pixel_buffer, drawable_region, opengl_reserved_blit_texture);
     SDL_GL_SwapWindow(window);
+
+    u64 counter_elapsed = end_counter - prev_counter;
+    prev_counter = end_counter;
+
+    // cast operator takes precedence over division, so compiler must convert operand to double also
+    sdl_log("FPS: %.02f\n", (r64)performance_counter_frequency / counter_elapsed);
   }
 
   return EXIT_SUCCESS;

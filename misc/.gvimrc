@@ -40,7 +40,7 @@ set nowrap
 compiler gcc
 
 if !exists('g:os')
-  if has('win32') || has('win64')
+  if has('win64')
     let g:os = 'Windows'
     autocmd GUIEnter * simalt ~x
   else

@@ -3,6 +3,9 @@ set nocompatible
 set fileencoding=utf-8 encoding=utf-8
 set noswapfile noundofile nobackup
 
+set spell
+" NOTE(Ryan): z=
+
 set expandtab softtabstop=2 tabstop=2
 set shiftwidth=2 shiftround 
 set autoindent autowrite

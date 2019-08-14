@@ -3,7 +3,7 @@ set nocompatible
 set fileencoding=utf-8 encoding=utf-8
 set noswapfile noundofile nobackup
 
-set spell
+set spell spelllang=en_au
 " NOTE(Ryan): z=
 
 set expandtab softtabstop=2 tabstop=2
